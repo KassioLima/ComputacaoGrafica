@@ -24,8 +24,8 @@ def prisma():
     # Base de cima
     glBegin(GL_TRIANGLE_FAN)
     for i in range(0, N):
-        x = raio * math.cos(i * angulo)
-        y = raio * math.sin(i * angulo)
+        x = raio * math.cos(i * angulo)  # * 0 para formar uma pirâmide
+        y = raio * math.sin(i * angulo)  # * 0 para formar uma pirâmide
         pontosBaseCima += [(x, y)]
         glVertex3f(x, y, H)
         glColor3fv(cores[(i) % len(cores)])
