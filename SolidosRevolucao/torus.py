@@ -3,33 +3,31 @@ from OpenGL.GLU import *
 from OpenGL.GL import *
 from math import *
 
-n1 = 50
-rotation_speed = 2
-radius = 2
+n1 = 50  # Não deixa a rosquinha parecendo uma porca
+raioMaior = 2
+raioMenor = 1
 a = 0
 
 
-def esfera(u, v):
-    theta = (u * pi / (n1 - 1)) - (pi / 2)
+def torus(u, v):
+    theta = (u * 2 * pi) / (n1 - 1)
     phi = (v * 2 * pi) / (n1 - 1)
-
-    x = radius * cos(theta) * cos(phi)
-    y = radius * sin(theta)
-    z = radius * cos(theta) * sin(phi)
+    x = (raioMaior + raioMenor * cos(theta)) * cos(phi)
+    y = (raioMaior + raioMenor * cos(theta)) * sin(phi)
+    z = (raioMenor * sin(theta))
 
     return x, y, z
 
 
-def desenha_esfera():
-    glRotatef(a, 1, 1, 1)
+def desenha_torus():
+    glRotatef(a, 1, 1, 0)
 
     for i in range(n1):
         glBegin(GL_QUAD_STRIP)
         for j in range(n1):
-            glColor3f((i / n1) - 0.3, 0, 0)
-            glVertex3fv(esfera(i, j))
-            glColor3f(0, 0, 0)
-            glVertex3fv(esfera(i - 1, j))
+            glColor3f(i / n1, 0, 0)
+            glVertex3fv(torus(i, j))
+            glVertex3fv(torus(i - 1, j))
         glEnd()
 
 
@@ -39,7 +37,7 @@ def desenha():
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 
     glPushMatrix()
-    desenha_esfera()
+    desenha_torus()
     glPopMatrix()
 
     glutSwapBuffers()
@@ -52,16 +50,17 @@ def timer(i):
     glutTimerFunc(10, timer, 1)
 
 
+# PROGRAMA PRINCIPAL
 glutInit(sys.argv)
 glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH | GLUT_MULTISAMPLE)
 glutInitWindowSize(800, 600)
-glutCreateWindow("Esfera")
+glutCreateWindow("Rosquinha")
 glutDisplayFunc(desenha)
 glEnable(GL_MULTISAMPLE)
 glEnable(GL_DEPTH_TEST)
 glClearColor(0.4, 0.2, 0, 1)
 gluPerspective(45, 800.0 / 600.0, 0.1, 100.0)
-glTranslatef(0, 0, -7)
-glutTimerFunc(50, timer, 1)
+glTranslatef(0, 0, -10)
+glutTimerFunc(10, timer, 1)
 glutMainLoop()
 
