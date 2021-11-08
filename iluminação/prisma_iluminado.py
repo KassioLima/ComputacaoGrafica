@@ -4,34 +4,24 @@ from OpenGL.GL import *
 import math
 import sys
 
-#https://www.opengl.org/wiki/Calculating_a_Surface_Normal
-#Begin Function CalculateSurfaceNormal (Input Triangle) Returns Vector
-#  Set Vector U to (Triangle.p2 minus Triangle.p1)
-#  Set Vector V to (Triangle.p3 minus Triangle.p1)
-#  Set Normal.x to (multiply U.y by V.z) minus (multiply U.z by V.y)
-#  Set Normal.y to (multiply U.z by V.x) minus (multiply U.x by V.z)
-#  Set Normal.z to (multiply U.x by V.y) minus (multiply U.y by V.x)
-#  Returning Normal
-#End Function
-
 def calculaNormalFace(v0, v1, v2):
     x = 0
     y = 1
     z = 2
 
-    U = ( v2[x]-v0[x], v2[y]-v0[y], v2[z]-v0[z] )
-    V = ( v1[x]-v0[x], v1[y]-v0[y], v1[z]-v0[z] )
-    N = ( (U[y]*V[z]-U[z]*V[y]),(U[z]*V[x]-U[x]*V[z]),(U[x]*V[y]-U[y]*V[x]))
-    NLength = math.sqrt(N[x]*N[x]+N[y]*N[y]+N[z]*N[z]) #modulo do vetor, tamanho do vetor, teorema de pitagoras
-    return ( N[x]/NLength, N[y]/NLength, N[z]/NLength) #normaliza o vetor da normal
+    U = (v2[x]-v0[x], v2[y]-v0[y], v2[z]-v0[z] )
+    V = (v1[x]-v0[x], v1[y]-v0[y], v1[z]-v0[z] )
+    N = ((U[y]*V[z]-U[z]*V[y]), (U[z]*V[x]-U[x]*V[z]), (U[x]*V[y]-U[y]*V[x]))
+    NLength = math.sqrt(N[x]*N[x]+N[y]*N[y]+N[z]*N[z])  # modulo do vetor, tamanho do vetor, teorema de pitagoras
+    return (N[x]/NLength, N[y]/NLength, N[z]/NLength)  # normaliza o vetor da normal
 
 def prisma():
 
     raio = 2
-    N = 6 #num de faces
-    H = 5 #altura
-    pontosBase = []
-    pontosBase2 = []
+    N = 6  # num de faces
+    H = 5  # altura
+    pontosBaseBaixo = []
+    pontosBaseCima = []
     angulo = (2 * math.pi) / N
 
     glPushMatrix()
@@ -39,22 +29,22 @@ def prisma():
     glRotatef(1, 0, 1, 0)  # roda o prisma
     glRotatef(-60, 1, 0, 0)  # inclinar o prisma
 
-    #Base
-    glBegin(GL_POLYGON) #desenha um pentagono com preenchimento
+    # Base de baixo
+    glBegin(GL_POLYGON)  # desenha um pentagono com preenchimento
     for i in range(0,N):
         x = raio * math.cos(i*angulo)
         y = raio * math.sin(i*angulo)
-        pontosBase += [ (x,y) ]
+        pontosBaseBaixo += [ (x,y) ]
         glVertex3f(x, y, 0.0)
 
     glEnd()
 
-    #Base de cima
-    glBegin(GL_POLYGON) #desenha um pentagono com preenchimento
+    # Base de cima
+    glBegin(GL_POLYGON)  # desenha um pentagono com preenchimento
     for i in range(0,N):
         x = raio * math.cos(i*angulo)
         y = raio * math.sin(i*angulo)
-        pontosBase2 += [ (x,y) ]
+        pontosBaseCima += [ (x,y) ]
         glVertex3f(x, y, H)
 
     glEnd()
@@ -63,10 +53,10 @@ def prisma():
     glBegin(GL_QUAD_STRIP) #a cada 6 vertices formam-se 2 retangulos
     for i in range(0,N):
 
-        a = (pontosBase2[i][0],pontosBase2[i][1],H)
-        b = (pontosBase2[(i+1)%N][0],pontosBase2[(i+1)%N][1],H)
-        c = (pontosBase[i][0],pontosBase[i][1],0.0)
-        d = (pontosBase[(i+1)%N][0],pontosBase[(i+1)%N][1],0.0)
+        a = (pontosBaseCima[i][0],pontosBaseCima[i][1],H)
+        b = (pontosBaseCima[(i+1)%N][0],pontosBaseCima[(i+1)%N][1],H)
+        c = (pontosBaseBaixo[i][0],pontosBaseBaixo[i][1],0.0)
+        d = (pontosBaseBaixo[(i+1)%N][0],pontosBaseBaixo[(i+1)%N][1],0.0)
 
         glNormal3fv(calculaNormalFace(a, b, c))
         glVertex3fv(a)
