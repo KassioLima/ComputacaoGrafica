@@ -63,7 +63,7 @@ def DrawGLScene():
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
     glLoadIdentity()
-    glClearColor(0.5, 0.5, 0.5, 1.0)
+    glClearColor(0, 0, 0.01, 1.0)
     glTranslatef(0.0, 0.0, -5.0)
     glRotatef(180, 0.0, 1.0, 0.0)
     glRotatef(xrot, 1.0, 0.0, 0.0)
